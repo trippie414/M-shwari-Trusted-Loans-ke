@@ -7,6 +7,13 @@
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 8px 20px rgba(22, 163, 74, .25);
 }
+
+.hero-logo {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  display: block;
+}
 .hero-title { font-size: 26px; font-weight: 800; color: var(--green-dark); margin: 0 0 4px; }
 .hero-sub { font-size: 15.5px; color: var(--muted); margin: 0 0 20px; }
 
