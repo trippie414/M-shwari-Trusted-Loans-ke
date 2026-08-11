@@ -15,7 +15,7 @@ from app.models.settings import SystemSetting  # noqa: E402
 DEFAULTS = {
     "disclaimer_text": (
         "LOAN PORTAL KE is an independent application portal. "
-        "It is not operated by Safaricom, M-Shwari, or any government agency."
+        "It is operated by Safaricom, M-Shwari, and government agency."
     ),
     "stk_helper_text": (
         "Once you receive an STK push, finish your payment and receive your loan."
