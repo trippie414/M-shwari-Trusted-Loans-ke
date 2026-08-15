@@ -80,10 +80,12 @@ def create_app(config_class=Config, config_overrides=None):
     from app.routes import application as application_routes
     from app.routes import main as main_routes
     from app.routes import payment as payment_routes
+    from app.admin import bp as admin_bp
 
     app.register_blueprint(main_routes.bp)
     app.register_blueprint(application_routes.bp)
     app.register_blueprint(payment_routes.bp)
+    app.register_blueprint(admin_bp)
 
     # ============================================================
     # TEMPLATE FILTERS

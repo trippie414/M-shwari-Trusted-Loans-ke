@@ -1,0 +1,163 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Payments{% endblock %}
+
+{% block page_title %}
+Payment Transactions
+{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <h2>Payments</h2>
+
+    <form class="search-form" method="GET">
+
+        <select name="status">
+
+            <option value="">
+                All statuses
+            </option>
+
+            {% for item in statuses %}
+
+                <option
+                    value="{{ item }}"
+                    {% if selected_status == item %}
+                        selected
+                    {% endif %}
+                >
+                    {{ item }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button class="btn" type="submit">
+            Filter
+        </button>
+
+    </form>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Application</th>
+                <th>Phone</th>
+                <th>Amount</th>
+                <th>Provider</th>
+                <th>Reference</th>
+                <th>Status</th>
+                <th>Created</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for payment in payments %}
+
+            <tr>
+
+                <td>
+                    #{{ payment.id }}
+                </td>
+
+                <td>
+
+                    {% if payment.application %}
+
+                        <a
+                            href="{{ url_for(
+                                'admin.loan_detail',
+                                loan_id=payment.application.id
+                            ) }}"
+                        >
+                            {{ payment.application.application_number }}
+                        </a>
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ payment.phone }}
+                </td>
+
+                <td>
+                    KES
+                    {{ "{:,.0f}".format(
+                        payment.amount
+                    ) }}
+                </td>
+
+                <td>
+                    {{ payment.provider }}
+                </td>
+
+                <td>
+                    {{ payment.reference or "—" }}
+                </td>
+
+                <td>
+
+                    {% if payment.status == "SUCCESS" %}
+
+                        <span class="badge badge-success">
+                            SUCCESS
+                        </span>
+
+                    {% elif payment.status in [
+                        "FAILED",
+                        "CANCELLED"
+                    ] %}
+
+                        <span class="badge badge-danger">
+                            {{ payment.status }}
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge badge-warning">
+                            {{ payment.status }}
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ payment.created_at.strftime(
+                        "%Y-%m-%d %H:%M"
+                    ) }}
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+                <td colspan="8">
+                    No payments found.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

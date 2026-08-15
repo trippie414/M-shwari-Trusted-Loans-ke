@@ -1,0 +1,180 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Loans{% endblock %}
+
+{% block page_title %}
+Loan Applications
+{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <h2>All Loan Applications</h2>
+
+    <form class="search-form" method="GET">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Application number, name, phone..."
+            value="{{ search }}"
+        >
+
+        <select name="status">
+
+            <option value="">
+                All statuses
+            </option>
+
+            {% for item in statuses %}
+
+                <option
+                    value="{{ item }}"
+                    {% if selected_status == item %}
+                        selected
+                    {% endif %}
+                >
+                    {{ item }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button class="btn" type="submit">
+            Filter
+        </button>
+
+    </form>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Application</th>
+                <th>Applicant</th>
+                <th>Phone</th>
+                <th>County</th>
+                <th>Loan</th>
+                <th>Fee</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for loan in loans %}
+
+            <tr>
+
+                <td>
+                    {{ loan.application_number }}
+                </td>
+
+                <td>
+                    {{ loan.full_name }}
+                </td>
+
+                <td>
+                    {{ loan.phone }}
+                </td>
+
+                <td>
+                    {{ loan.county }}
+                </td>
+
+                <td>
+                    KES
+                    {{ "{:,.0f}".format(
+                        loan.loan_amount
+                    ) }}
+                </td>
+
+                <td>
+                    KES
+                    {{ "{:,.0f}".format(
+                        loan.service_fee
+                    ) }}
+                </td>
+
+                <td>
+
+                    {% if loan.status == "PAYMENT_SUCCESS" %}
+
+                        <span class="badge badge-success">
+                            {{ loan.status }}
+                        </span>
+
+                    {% elif loan.status in [
+                        "PAYMENT_FAILED",
+                        "PAYMENT_CANCELLED"
+                    ] %}
+
+                        <span class="badge badge-danger">
+                            {{ loan.status }}
+                        </span>
+
+                    {% elif loan.status in [
+                        "SUBMITTED",
+                        "PAYMENT_PENDING"
+                    ] %}
+
+                        <span class="badge badge-warning">
+                            {{ loan.status }}
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge badge-info">
+                            {{ loan.status }}
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ loan.created_at.strftime(
+                        "%Y-%m-%d %H:%M"
+                    ) }}
+                </td>
+
+                <td>
+
+                    <a
+                        class="btn"
+                        href="{{ url_for(
+                            'admin.loan_detail',
+                            loan_id=loan.id
+                        ) }}"
+                    >
+                        View
+                    </a>
+
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+                <td colspan="9">
+                    No loan applications found.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

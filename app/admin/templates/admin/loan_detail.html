@@ -1,0 +1,225 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Loan Details{% endblock %}
+
+{% block page_title %}
+Loan Application
+{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <h2>
+        {{ loan.application_number }}
+    </h2>
+
+    <table>
+
+        <tr>
+            <th>Application Number</th>
+            <td>{{ loan.application_number }}</td>
+        </tr>
+
+        <tr>
+            <th>Applicant</th>
+            <td>{{ loan.full_name }}</td>
+        </tr>
+
+        <tr>
+            <th>Phone</th>
+            <td>{{ loan.phone }}</td>
+        </tr>
+
+        <tr>
+            <th>Email</th>
+            <td>{{ loan.email or "—" }}</td>
+        </tr>
+
+        <tr>
+            <th>County</th>
+            <td>{{ loan.county }}</td>
+        </tr>
+
+        <tr>
+            <th>Loan Reason</th>
+            <td>{{ loan.loan_reason }}</td>
+        </tr>
+
+        <tr>
+            <th>Loan Amount</th>
+            <td>
+                KES
+                {{ "{:,.0f}".format(
+                    loan.loan_amount
+                ) }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Service Fee</th>
+            <td>
+                KES
+                {{ "{:,.0f}".format(
+                    loan.service_fee
+                ) }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Total Amount</th>
+            <td>
+                KES
+                {{ "{:,.0f}".format(
+                    loan.total_amount
+                ) }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Status</th>
+            <td>
+                <span class="badge badge-info">
+                    {{ loan.status }}
+                </span>
+            </td>
+        </tr>
+
+        <tr>
+            <th>Created</th>
+            <td>
+                {{ loan.created_at.strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ) }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Last Updated</th>
+            <td>
+                {{ loan.updated_at.strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ) if loan.updated_at else "—" }}
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Payment Transactions
+    </h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Phone</th>
+                <th>Amount</th>
+                <th>Provider</th>
+                <th>Reference</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for payment in transactions %}
+
+            <tr>
+
+                <td>
+                    #{{ payment.id }}
+                </td>
+
+                <td>
+                    {{ payment.phone }}
+                </td>
+
+                <td>
+                    KES
+                    {{ "{:,.0f}".format(
+                        payment.amount
+                    ) }}
+                </td>
+
+                <td>
+                    {{ payment.provider }}
+                </td>
+
+                <td>
+                    {{ payment.reference or "—" }}
+                </td>
+
+                <td>
+
+                    {% if payment.status == "SUCCESS" %}
+
+                        <span class="badge badge-success">
+                            SUCCESS
+                        </span>
+
+                    {% elif payment.status in [
+                        "FAILED",
+                        "CANCELLED"
+                    ] %}
+
+                        <span class="badge badge-danger">
+                            {{ payment.status }}
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge badge-warning">
+                            {{ payment.status }}
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ payment.created_at.strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    ) }}
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+                <td colspan="7">
+                    No payment transactions.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <a
+        class="btn"
+        href="{{ url_for('admin.loans') }}"
+    >
+        ← Back to Applications
+    </a>
+
+</div>
+
+{% endblock %}

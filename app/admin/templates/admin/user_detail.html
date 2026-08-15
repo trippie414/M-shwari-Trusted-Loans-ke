@@ -1,0 +1,149 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Customer Details{% endblock %}
+
+{% block page_title %}
+Customer Details
+{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <h2>{{ user.full_name }}</h2>
+
+    <table>
+
+        <tr>
+            <th>Customer ID</th>
+            <td>#{{ user.id }}</td>
+        </tr>
+
+        <tr>
+            <th>Full Name</th>
+            <td>{{ user.full_name }}</td>
+        </tr>
+
+        <tr>
+            <th>Phone</th>
+            <td>{{ user.phone or "—" }}</td>
+        </tr>
+
+        <tr>
+            <th>Email</th>
+            <td>{{ user.email or "—" }}</td>
+        </tr>
+
+        <tr>
+            <th>Status</th>
+            <td>
+                {% if user.is_active_flag %}
+                    <span class="badge badge-success">
+                        Active
+                    </span>
+                {% else %}
+                    <span class="badge badge-danger">
+                        Inactive
+                    </span>
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Created</th>
+            <td>
+                {{ user.created_at.strftime(
+                    "%Y-%m-%d %H:%M"
+                ) if user.created_at else "—" }}
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <h2>Loan Applications</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Application</th>
+                <th>Amount</th>
+                <th>Fee</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for loan in loans %}
+
+            <tr>
+
+                <td>
+                    {{ loan.application_number }}
+                </td>
+
+                <td>
+                    KES
+                    {{ "{:,.0f}".format(loan.loan_amount) }}
+                </td>
+
+                <td>
+                    KES
+                    {{ "{:,.0f}".format(loan.service_fee) }}
+                </td>
+
+                <td>
+                    <span class="badge badge-info">
+                        {{ loan.status }}
+                    </span>
+                </td>
+
+                <td>
+                    {{ loan.created_at.strftime(
+                        "%Y-%m-%d %H:%M"
+                    ) }}
+                </td>
+
+                <td>
+
+                    <a
+                        class="btn"
+                        href="{{ url_for(
+                            'admin.loan_detail',
+                            loan_id=loan.id
+                        ) }}"
+                    >
+                        View
+                    </a>
+
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+                <td colspan="6">
+                    No loan applications.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

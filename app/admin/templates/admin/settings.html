@@ -1,0 +1,71 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block page_title %}
+System Settings
+{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <h2>System Information</h2>
+
+    <table>
+
+        <tr>
+            <th>Application</th>
+            <td>M_SHWARI LOANS</td>
+        </tr>
+
+        <tr>
+            <th>Payment Provider</th>
+            <td>
+                {{ config.PAYMENT_PROVIDER
+                   if config.PAYMENT_PROVIDER
+                   else "—" }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Payment Amount Mode</th>
+            <td>
+                {{ config.PAYMENT_AMOUNT_MODE
+                   if config.PAYMENT_AMOUNT_MODE
+                   else "—" }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Lab Mode</th>
+            <td>
+                {% if config.LAB_MODE %}
+                    Enabled
+                {% else %}
+                    Disabled
+                {% endif %}
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <h2>Security</h2>
+
+    <p>
+        Admin access is controlled through the private
+        admin URL configured in the server environment.
+    </p>
+
+    <p>
+        Payment credentials are not displayed here.
+    </p>
+
+</div>
+
+{% endblock %}

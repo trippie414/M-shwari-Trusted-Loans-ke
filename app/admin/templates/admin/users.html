@@ -1,0 +1,122 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Users{% endblock %}
+
+{% block page_title %}
+Customers
+{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <h2>Customers</h2>
+
+    <form class="search-form" method="GET">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search name, phone or email..."
+            value="{{ search }}"
+        >
+
+        <button class="btn" type="submit">
+            Search
+        </button>
+
+    </form>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Registered</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for user in users %}
+
+            <tr>
+
+                <td>
+                    #{{ user.id }}
+                </td>
+
+                <td>
+                    {{ user.full_name }}
+                </td>
+
+                <td>
+                    {{ user.phone or "—" }}
+                </td>
+
+                <td>
+                    {{ user.email or "—" }}
+                </td>
+
+                <td>
+
+                    {% if user.is_active_flag %}
+
+                        <span class="badge badge-success">
+                            Active
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge badge-danger">
+                            Inactive
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ user.created_at.strftime(
+                        "%Y-%m-%d %H:%M"
+                    ) if user.created_at else "—" }}
+                </td>
+
+                <td>
+
+                    <a
+                        class="btn"
+                        href="{{ url_for(
+                            'admin.user_detail',
+                            user_id=user.id
+                        ) }}"
+                    >
+                        View
+                    </a>
+
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+                <td colspan="7">
+                    No customers found.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

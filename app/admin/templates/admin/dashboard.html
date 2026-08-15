@@ -1,0 +1,298 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block page_title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="cards">
+
+    <div class="card">
+        <div class="card-title">
+            Total Users
+        </div>
+
+        <div class="card-value">
+            {{ total_users }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            Active Users
+        </div>
+
+        <div class="card-value">
+            {{ active_users }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            Loan Applications
+        </div>
+
+        <div class="card-value">
+            {{ total_loans }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            Pending Loans
+        </div>
+
+        <div class="card-value">
+            {{ pending_loans }}
+        </div>
+    </div>
+
+</div>
+
+
+<div class="cards">
+
+    <div class="card">
+        <div class="card-title">
+            Approved Loans
+        </div>
+
+        <div class="card-value">
+            {{ approved_loans }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            Failed / Cancelled
+        </div>
+
+        <div class="card-value">
+            {{ failed_loans }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            Payment Transactions
+        </div>
+
+        <div class="card-value">
+            {{ total_payments }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            Successful Payments
+        </div>
+
+        <div class="card-value">
+            {{ successful_payments }}
+        </div>
+    </div>
+
+</div>
+
+
+<div class="cards">
+
+    <div class="card">
+
+        <div class="card-title">
+            Total Loan Value
+        </div>
+
+        <div class="card-value">
+            KES
+            {{ "{:,.0f}".format(total_loan_amount) }}
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-title">
+            Successful Payment Value
+        </div>
+
+        <div class="card-value">
+            KES
+            {{ "{:,.0f}".format(total_payment_amount) }}
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Recent Applications
+    </h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Application</th>
+                <th>Applicant</th>
+                <th>Phone</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for loan in recent_loans %}
+
+            <tr>
+
+                <td>
+                    {{ loan.application_number }}
+                </td>
+
+                <td>
+                    {{ loan.full_name }}
+                </td>
+
+                <td>
+                    {{ loan.phone }}
+                </td>
+
+                <td>
+                    KES
+                    {{ "{:,.0f}".format(loan.loan_amount) }}
+                </td>
+
+                <td>
+                    <span class="badge badge-info">
+                        {{ loan.status }}
+                    </span>
+                </td>
+
+                <td>
+                    {{ loan.created_at.strftime(
+                        "%Y-%m-%d %H:%M"
+                    ) }}
+                </td>
+
+                <td>
+
+                    <a
+                        class="btn"
+                        href="{{ url_for(
+                            'admin.loan_detail',
+                            loan_id=loan.id
+                        ) }}"
+                    >
+                        View
+                    </a>
+
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+                <td colspan="7">
+                    No applications yet.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Recent Payments
+    </h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Phone</th>
+                <th>Amount</th>
+                <th>Provider</th>
+                <th>Reference</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for payment in recent_payments %}
+
+            <tr>
+
+                <td>
+                    {{ payment.phone }}
+                </td>
+
+                <td>
+                    KES
+                    {{ "{:,.0f}".format(payment.amount) }}
+                </td>
+
+                <td>
+                    {{ payment.provider }}
+                </td>
+
+                <td>
+                    {{ payment.reference or "—" }}
+                </td>
+
+                <td>
+
+                    <span class="badge badge-info">
+                        {{ payment.status }}
+                    </span>
+
+                </td>
+
+                <td>
+                    {{ payment.created_at.strftime(
+                        "%Y-%m-%d %H:%M"
+                    ) }}
+                </td>
+
+            </tr>
+
+        {% else %}
+
+            <tr>
+                <td colspan="6">
+                    No payments yet.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
