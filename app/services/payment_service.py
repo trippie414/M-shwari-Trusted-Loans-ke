@@ -761,10 +761,27 @@ def initiate_pending_payment(transaction):
     provider = get_provider()
 
     try:
+        current_app.logger.warning(
+            "STK TIMING: START transaction=%s phone=%s amount=%s",
+            transaction.id,
+            transaction.phone,
+            transaction.amount,
+        )
+
+        import time
+        _stk_started = time.monotonic()
+
         result_tx = provider.initiate(
             application=application,
             phone=transaction.phone,
             amount=transaction.amount,
+        )
+
+        current_app.logger.warning(
+            "STK TIMING: PROVIDER RETURNED transaction=%s elapsed=%.3fs result=%s",
+            transaction.id,
+            time.monotonic() - _stk_started,
+            result_tx,
         )
 
         # ----------------------------------------------------
