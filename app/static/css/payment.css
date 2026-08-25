@@ -1,0 +1,5 @@
+
+/* Hide empty payment error container */
+.payment-error:empty {
+    display: none !important;
+}
