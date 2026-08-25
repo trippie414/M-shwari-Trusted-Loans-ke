@@ -194,7 +194,6 @@ def start_payment(application_id, transaction_id):
         return jsonify({
             "status": payment_service.FAILED,
             "error": (
-                "Please remain patientwhile we process your transaction. "
                 
             ),
         }), 502
